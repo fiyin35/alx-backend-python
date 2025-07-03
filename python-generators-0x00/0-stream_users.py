@@ -1,28 +1,35 @@
-from mysql.connector import connect
-from dotenv import load_dotenv
-from os import getenv
+#!/usr/bin/env python3
+from seed import connect_to_prodev
+from typing import Generator, Dict, Any
 
-load_dotenv()
-
-
-def stream_users():
-    """a generator that fetches rows one by one from user_data table"""
-
-    connection = connect(
-        host = getenv("HOST"),
-        user = getenv("DBUSER", "root"),
-        password = getenv("PASSWORD"),
-        database = getenv("DBNAME", "ALX_prodev")
-    )
-
-    cursor = connection.cursor()
+def stream_users() -> Generator[Dict[str, Any], None, None]:
+    """
+    Generator function that fetches rows one by one from the user_data table.
+    
+    Yields:
+        Dict[str, Any]: Each row as a dictionary with column names as keys
+    """
+    # Create database connection
+    conn = connect_to_prodev()
+    
     try:
+        cursor = conn.cursor()
         cursor.execute("SELECT * FROM user_data")
-
-        for row in cursor:
-            yield row
-    except Exception as e:
-        print(f"An error occurred: {e}")
+        
+        # Single loop to fetch and yield rows one by one
+        while True:
+            row = cursor.fetchone()
+            if row is None:
+                break
+            yield dict(row)
+    
     finally:
-        cursor.close()
-        connection.close()
+        conn.close()
+
+
+# Example usage:
+if __name__ == "__main__":
+    # Stream through users one by one
+    for user in stream_users():
+        print(user)
+        # Process each user individually without loading all into memory
