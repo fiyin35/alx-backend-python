@@ -26,10 +26,3 @@ def stream_users() -> Generator[Dict[str, Any], None, None]:
     finally:
         conn.close()
 
-
-# Example usage:
-if __name__ == "__main__":
-    # Stream through users one by one
-    for user in stream_users():
-        print(user)
-        # Process each user individually without loading all into memory

@@ -57,20 +57,3 @@ def lazy_paginate(page_size: int) -> Generator[List[Dict[str, Any]], None, None]
         # Move to the next page
         offset += page_size
 
-
-# Example usage:
-if __name__ == "__main__":
-    page_size = 5
-    
-    print(f"Lazily paginating users with page size: {page_size}")
-    
-    # Process pages lazily - only fetches when needed
-    for page_num, page in enumerate(lazy_paginate(page_size), 1):
-        print(f"\nPage {page_num} ({len(page)} users):")
-        for user in page:
-            print(f"  - ID: {user.get('id', 'Unknown')}, Name: {user.get('name', 'Unknown')}")
-        
-        # Example: Break after 3 pages to demonstrate lazy loading
-        if page_num >= 3:
-            print("\n... (stopping after 3 pages for demo)")
-            break

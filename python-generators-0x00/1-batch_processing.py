@@ -57,15 +57,3 @@ def batch_processing(batch_size: int) -> Generator[List[Dict[str, Any]], None, N
             yield filtered_users
 
 
-# Example usage:
-if __name__ == "__main__":
-    batch_size = 10
-    
-    print("Processing users in batches, filtering for age > 25:")
-    
-    # Process batches and print results
-    for filtered_batch in batch_processing(batch_size):
-        print(f"Batch of {len(filtered_batch)} users over 25:")
-        for user in filtered_batch:
-            print(f"  - {user.get('name', 'Unknown')}, Age: {user.get('age', 'Unknown')}")
-        print("---")
