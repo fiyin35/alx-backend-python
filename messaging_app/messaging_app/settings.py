@@ -32,6 +32,7 @@ os.environ.get("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = []
+AUTH_USER_MODEL = 'chats.User'
 
 
 # Application definition
