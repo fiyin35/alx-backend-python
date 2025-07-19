@@ -10,12 +10,12 @@ class UserSerializer(serializers.ModelSerializer):
     """
     # Example of using SerializerMethodField to add a computed field.
     # The method get_full_name will be called to populate this field.
-    full_name = serializers.SerializerMethodField(help_text="The full name of the user.")
+    full_name = serializers.CharField(help_text="The full name of the user.")
 
     class Meta:
         model = User
         fields = ['user_id', 'username', 'email', 'first_name', 'last_name', 'full_name']
-        read_only_fields = ['user_id', 'full_name'] # user_id and full_name are auto-generated/computed
+        read_only_fields = ['user_id', 'full_name']
 
     # Method to compute the 'full_name' field.
     # This demonstrates how to use SerializerMethodField.
@@ -55,10 +55,14 @@ class ConversationSerializer(serializers.ModelSerializer):
     # Use MessageSerializer to represent all messages within the conversation when reading.
     messages = MessageSerializer(many=True, read_only=True)
 
+    last_message_preview = serializers.SerializerMethodField()
+    
+
     class Meta:
         model = Conversation
-        fields = ['conversation_id', 'participants', 'messages', 'created_at', 'updated_at']
+        fields = ['conversation_id', 'participants', 'messages', 'last_message_preview', 'created_at', 'updated_at']
         read_only_fields = ['conversation_id', 'created_at', 'updated_at']
+
 
     # Custom validation method for the entire serializer.
     # This method is called after individual field validations.
