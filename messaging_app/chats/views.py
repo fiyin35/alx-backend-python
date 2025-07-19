@@ -1,19 +1,18 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied, ValidationError
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet for listing and creating conversations.
-    Only returns conversations the current user is a participant of.
-    """
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created_at']
 
     def get_queryset(self):
         return Conversation.objects.filter(participants=self.request.user).prefetch_related('participants', 'messages')
@@ -23,7 +22,6 @@ class ConversationViewSet(viewsets.ModelViewSet):
         if not participant_ids:
             raise ValidationError({'participants': 'This field is required.'})
 
-        # Include the current user in the participants list
         conversation = Conversation.objects.create()
         conversation.participants.set(participant_ids + [request.user.id])
         conversation.save()
@@ -33,23 +31,15 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
 
 class MessageViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet for listing and creating messages.
-    Accepts conversation ID as query param for listing.
-    """
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['conversation']
+    ordering_fields = ['timestamp']
 
     def get_queryset(self):
-        conversation_id = self.request.query_params.get('conversation')
-        if not conversation_id:
-            return Message.objects.none()
-
-        conversation = Conversation.objects.filter(id=conversation_id, participants=self.request.user).first()
-        if not conversation:
-            raise PermissionDenied('You are not a participant in this conversation.')
-
-        return conversation.messages.select_related('sender')
+        queryset = Message.objects.select_related('sender', 'conversation')
+        return queryset.filter(conversation__participants=self.request.user)
 
     def perform_create(self, serializer):
         conversation_id = self.request.data.get('conversation')
