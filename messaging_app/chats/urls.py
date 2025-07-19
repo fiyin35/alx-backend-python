@@ -1,17 +1,16 @@
-from .views import ConversationViewSet, MessageViewSet
-from rest_framework import routers
+from rest_framework_nested import routers
 from django.urls import path, include
 from .views import ConversationViewSet, MessageViewSet
 
+# Main router for conversations
 router = routers.DefaultRouter()
-router.register(r'conversations', ConversationViewSet, basename='conversation')
+router.register(r'conversations', ConversationViewSet, basename='conversations')
+
+# Nested router for messages within conversations
+convo_router = routers.NestedDefaultRouter(router, r'conversations', lookup='conversation')
+convo_router.register(r'messages', MessageViewSet, basename='conversation-messages')
 
 urlpatterns = [
-    path('', include(router.urls)), # Includes routes like /conversations/ and /conversations/<uuid:pk>/
-    path('conversations/<uuid:conversation_conversation_id>/messages/',
-         MessageViewSet.as_view({'get': 'list', 'post': 'create'}),
-         name='conversation-messages-list'),
-    path('conversations/<uuid:conversation_conversation_id>/messages/<uuid:pk>/',
-         MessageViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}),
-         name='conversation-messages-detail'),
+    path('', include(router.urls)),
+    path('', include(convo_router.urls)),
 ]
