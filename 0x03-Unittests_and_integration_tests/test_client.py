@@ -93,8 +93,20 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             client.public_repos(license="apache-2.0"),
             self.apache2_repos
         )
+    
+    def test_public_repos(self):
+        """Test public_repos without license filter"""
+        result = self.client.public_repos()
+        self.assertEqual(result, self.expected_repos)
 
-        
+
+    def test_public_repos_with_license(self):
+        """Test public_repos filtered by license=apache-2.0"""
+        result = self.client.public_repos(license="apache-2.0")
+        self.assertEqual(result, self.apache2_repos)
+
+
+
 class MockResponse:
     """Mock response object to mimic requests.get().json()."""
     def __init__(self, json_data):
