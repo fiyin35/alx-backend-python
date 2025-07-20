@@ -7,7 +7,6 @@ from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
-from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 from typing import Dict
 
 class TestGithubOrgClient(unittest.TestCase):
