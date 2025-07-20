@@ -49,10 +49,10 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected)
 @parameterized_class([
     {
-        "org_payload": TEST_PAYLOAD["org_payload"],
-        "repos_payload": TEST_PAYLOAD["repos_payload"],
-        "expected_repos": TEST_PAYLOAD["expected_repos"],
-        "apache2_repos": TEST_PAYLOAD["apache2_repos"],
+        "org_payload": TEST_PAYLOAD[0]["org_payload"],
+        "repos_payload": TEST_PAYLOAD[0]["repos_payload"],
+        "expected_repos": TEST_PAYLOAD[0]["expected_repos"],
+        "apache2_repos": TEST_PAYLOAD[0]["apache2_repos"],
     }
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
