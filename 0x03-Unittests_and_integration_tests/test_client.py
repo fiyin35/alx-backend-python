@@ -5,18 +5,13 @@ import unittest
 from unittest.mock import patch, PropertyMock
 from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
-
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
-
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
-
-
 from typing import Dict
 
 class TestGithubOrgClient(unittest.TestCase):
     """Test cases for GithubOrgClient"""
-
     @parameterized.expand([
         ("google",),
         ("abc",),
@@ -32,7 +27,6 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.assert_called_once_with(
             f"https://api.github.com/orgs/{org_name}"
         )
-
     def test_public_repos(self) -> None:
         """Test that _public_repos_url returns the correct repos_url from org payload."""
         test_url = "https://api.github.com/orgs/test/repos"
@@ -46,8 +40,6 @@ class TestGithubOrgClient(unittest.TestCase):
             client = GithubOrgClient("test")
             result = client._public_repos_url
             self.assertEqual(result, test_url)
-    
-
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
         ({"license": {"key": "other_license"}}, "my_license", False),
@@ -56,15 +48,12 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test that has_license returns True only when license matches."""
         result = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(result, expected)
-
-
-
 @parameterized_class([
     {
-        "org_payload": org_payload,
-        "repos_payload": repos_payload,
-        "expected_repos": expected_repos,
-        "apache2_repos": apache2_repos,
+        "org_payload": TEST_PAYLOAD["org_payload"],
+        "repos_payload": TEST_PAYLOAD["repos_payload"],
+        "expected_repos": TEST_PAYLOAD["expected_repos"],
+        "apache2_repos": TEST_PAYLOAD["apache2_repos"],
     }
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
@@ -81,7 +70,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             MockResponse(cls.org_payload),
             MockResponse(cls.repos_payload)
         ]
-
     @classmethod
     def tearDownClass(cls) -> None:
         """Stop patcher."""
@@ -104,9 +92,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         """Test public_repos without license filter"""
         result = self.client.public_repos()
         self.assertEqual(result, self.expected_repos)
-
-
-
 class MockResponse:
     """Mock response object to mimic requests.get().json()."""
     def __init__(self, json_data):
