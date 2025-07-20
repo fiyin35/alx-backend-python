@@ -6,6 +6,7 @@ from unittest.mock import patch, PropertyMock
 from parameterized import parameterized
 from client import GithubOrgClient
 
+from typing import Dict
 
 class TestGithubOrgClient(unittest.TestCase):
     """Test cases for GithubOrgClient"""
@@ -39,3 +40,19 @@ class TestGithubOrgClient(unittest.TestCase):
             client = GithubOrgClient("test")
             result = client._public_repos_url
             self.assertEqual(result, test_url)
+    
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False),
+    ])
+    def test_has_license(
+        self,
+        repo: Dict[str, Dict[str, str]],
+        license_key: str,
+        expected: bool
+    ) -> None:
+        """Test that has_license returns True only when license matches."""
+        result = GithubOrgClient.has_license(repo, license_key)
+        self.assertEqual(result, expected)
+
