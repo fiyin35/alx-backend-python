@@ -21,11 +21,6 @@ class User(AbstractUser):
         help_text="Unique identifier for the user"
     )
 
-    # Add any additional custom fields here if needed in the future.
-    # Example:
-    # phone_number = models.CharField(max_length=20, blank=True, null=True)
-    # bio = models.TextField(blank=True, null=True)
-
     def __str__(self):
         return self.username
 
@@ -49,9 +44,9 @@ class Conversation(models.Model):
         related_name='conversations',
         help_text="Users participating in this conversation"
     )
-    # Optional: A field to track when the conversation was created
+    # A field to track when the conversation was created
     created_at = models.DateTimeField(auto_now_add=True)
-    # Optional: A field to track the last time a message was sent in this conversation
+    # A field to track the last time a message was sent in this conversation
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
