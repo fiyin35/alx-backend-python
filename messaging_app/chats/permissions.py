@@ -1,7 +1,8 @@
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 from rest_framework import permissions
 
 
-class IsOwnerOrReadOnly(permissions):
+class IsOwnerOrReadOnly(BasePermission):
     """
     Allow only owners of an object to access/modify it.
     """
@@ -9,7 +10,7 @@ class IsOwnerOrReadOnly(permissions):
         return obj.user == request.user
 
 
-class IsConversationParticipant(permissions):
+class IsConversationParticipant(BasePermission):
     """
     Allow only participants to view or interact with a conversation.
     """
