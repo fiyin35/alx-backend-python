@@ -1,0 +1,12 @@
+2025-07-27 23:20:13.560499 - User: Anonymous - Path: /api/users/
+2025-07-27 23:20:42.225041 - User: Anonymous - Path: /api/conversations/
+Unauthorized: /api/conversations/
+2025-07-27 23:09:16.084375 - User: Anonymous - Path: /api/
+Forbidden: /api/
+2025-07-27 23:09:52.339301 - User: Anonymous - Path: /api/users/
+Forbidden: /api/users/
+2025-07-27 23:23:21.311006 - User: Anonymous - Path: /api/messages/
+Forbidden: /api/messages/
+C:\Documents\alx-backend-python\Django-Middleware-0x03\chats\middleware.py changed, reloading.
+C:\Documents\alx-backend-python\Django-Middleware-0x03\chats\middleware.py changed, reloading.
+C:\Documents\alx-backend-python\Django-Middleware-0x03\chats\middleware.py changed, reloading
