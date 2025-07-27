@@ -15,15 +15,19 @@ class IsOwnerOrReadOnly(BasePermission):
 
 class IsParticipantOfConversation(BasePermission):
     """
-    Permission to only allow participants of a conversation to access or modify it.
-    Assumes `conversation` is a FK on the object, with `sender` and `receiver`.
+    Custom permission:
+    - Only authenticated users allowed
+    - Only participants in a conversation can send/view/update/delete messages
     """
 
     def has_permission(self, request: Request, view: View) -> bool:
+        # Allow only authenticated users
         return request.user and request.user.is_authenticated
 
     def has_object_permission(self, request: Request, view: View, obj) -> bool:
-        # For Message objects, check linked conversation
+        user = request.user
+
+        # Get the related conversation
         if isinstance(obj, Message):
             conversation = obj.conversation
         elif isinstance(obj, Conversation):
@@ -31,7 +35,13 @@ class IsParticipantOfConversation(BasePermission):
         else:
             return False
 
-        return request.user == conversation.sender or request.user == conversation.receiver
+        is_participant = user == conversation.sender or user == conversation.receiver
+
+        # Restrict to participants for any method
+        if request.method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
+            return is_participant
+
+        return False
 
 
 
