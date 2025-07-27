@@ -11,6 +11,9 @@ urlpatterns = [
     path('api/', include('chats.urls')),
     path('api-auth/', include('rest_framework.urls')),
 
+      # API v1 routes
+    path('api/v1/', include('chats.urls')),
+    
 
     # JWT auth endpoints
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
